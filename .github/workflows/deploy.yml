@@ -34,3 +34,9 @@ jobs:
           folder: dist
           branch: gh-pages
           clean: true
+
+      - name: Upload Build Artifact (ZIP)
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-assets
+          path: dist
