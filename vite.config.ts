@@ -19,6 +19,26 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks(id) {
+              // Target page files in the pages directory specifically
+              if (id.includes('/pages/')) {
+                const match = id.match(/\/pages\/([^/]+)\.(tsx|ts|jsx|js)$/);
+                if (match) {
+                  // This will name the chunk files exactly after their page component (e.g. page-Home)
+                  return `page-${match[1]}`;
+                }
+              }
+            },
+            // Specify clean and organized output file patterns
+            entryFileNames: 'assets/[name]-[hash].js',
+            chunkFileNames: 'assets/[name]-[hash].js',
+            assetFileNames: 'assets/[name]-[hash].[ext]',
+          }
+        }
       }
     };
 });
