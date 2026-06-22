@@ -1,23 +1,6 @@
 
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import Home from './pages/Home.tsx';
-import Markets from './pages/Markets.tsx';
-import Trade from './pages/Trade.tsx';
-import Holding from './pages/Holding.tsx';
-import Profile from './pages/Profile.tsx';
-import Notifications from './pages/Notifications.tsx';
-import Auth from './pages/Auth.tsx';
-import Recharge from './pages/Recharge.tsx';
-import Withdrawal from './pages/Withdrawal.tsx';
-import Invite from './pages/Invite.tsx';
-import Team from './pages/Team.tsx';
-import Rules from './pages/Rules.tsx';
-import Support from './pages/Support.tsx';
-import WalletPage from './pages/Wallet.tsx';
-import KYC from './pages/KYC.tsx';
-import WithdrawSettings from './pages/WithdrawSettings.tsx';
-import TransactionHistory from './pages/TransactionHistory.tsx';
 import { NotificationToast } from './components/NotificationToast.tsx';
 import { AuthService } from './services/binance.ts';
 import { 
@@ -29,6 +12,25 @@ import {
   Loader2,
   Smartphone
 } from 'lucide-react';
+
+// Lazy Load Pages for Code Splitting (Outputs separate JS files)
+const Home = React.lazy(() => import('./pages/Home.tsx'));
+const Markets = React.lazy(() => import('./pages/Markets.tsx'));
+const Trade = React.lazy(() => import('./pages/Trade.tsx'));
+const Holding = React.lazy(() => import('./pages/Holding.tsx'));
+const Profile = React.lazy(() => import('./pages/Profile.tsx'));
+const Notifications = React.lazy(() => import('./pages/Notifications.tsx'));
+const Auth = React.lazy(() => import('./pages/Auth.tsx'));
+const Recharge = React.lazy(() => import('./pages/Recharge.tsx'));
+const Withdrawal = React.lazy(() => import('./pages/Withdrawal.tsx'));
+const Invite = React.lazy(() => import('./pages/Invite.tsx'));
+const Team = React.lazy(() => import('./pages/Team.tsx'));
+const Rules = React.lazy(() => import('./pages/Rules.tsx'));
+const Support = React.lazy(() => import('./pages/Support.tsx'));
+const WalletPage = React.lazy(() => import('./pages/Wallet.tsx'));
+const KYC = React.lazy(() => import('./pages/KYC.tsx'));
+const WithdrawSettings = React.lazy(() => import('./pages/WithdrawSettings.tsx'));
+const TransactionHistory = React.lazy(() => import('./pages/TransactionHistory.tsx'));
 
 // Shared Authentication State
 export const AuthContext = createContext<{
@@ -153,28 +155,35 @@ const App: React.FC = () => {
         <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-yellow-400 selection:text-black">
           <NotificationToast />
           <main className="max-w-md mx-auto px-5 pt-8 pb-24">
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/register" element={<Auth />} />
-              <Route path="/register/:ref" element={<Auth />} />
-              <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-              <Route path="/markets" element={<ProtectedRoute><Markets /></ProtectedRoute>} />
-              <Route path="/trade" element={<ProtectedRoute><Trade /></ProtectedRoute>} />
-              <Route path="/holding" element={<ProtectedRoute><Holding /></ProtectedRoute>} />
-              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-              <Route path="/recharge" element={<ProtectedRoute><Recharge /></ProtectedRoute>} />
-              <Route path="/withdrawal" element={<ProtectedRoute><Withdrawal /></ProtectedRoute>} />
-              <Route path="/invite" element={<ProtectedRoute><Invite /></ProtectedRoute>} />
-              <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
-              <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />
-              <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
-              <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
-              <Route path="/kyc" element={<ProtectedRoute><KYC /></ProtectedRoute>} />
-              <Route path="/withdraw-settings" element={<ProtectedRoute><WithdrawSettings /></ProtectedRoute>} />
-              <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <React.Suspense fallback={
+              <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4">
+                <Loader2 className="animate-spin text-yellow-400" size={36} />
+                <p className="text-[8px] font-black uppercase tracking-[0.4em] text-gray-400 animate-pulse italic">Loading section...</p>
+              </div>
+            }>
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/register" element={<Auth />} />
+                <Route path="/register/:ref" element={<Auth />} />
+                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                <Route path="/markets" element={<ProtectedRoute><Markets /></ProtectedRoute>} />
+                <Route path="/trade" element={<ProtectedRoute><Trade /></ProtectedRoute>} />
+                <Route path="/holding" element={<ProtectedRoute><Holding /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                <Route path="/recharge" element={<ProtectedRoute><Recharge /></ProtectedRoute>} />
+                <Route path="/withdrawal" element={<ProtectedRoute><Withdrawal /></ProtectedRoute>} />
+                <Route path="/invite" element={<ProtectedRoute><Invite /></ProtectedRoute>} />
+                <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+                <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />
+                <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+                <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
+                <Route path="/kyc" element={<ProtectedRoute><KYC /></ProtectedRoute>} />
+                <Route path="/withdraw-settings" element={<ProtectedRoute><WithdrawSettings /></ProtectedRoute>} />
+                <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </React.Suspense>
           </main>
           <Navbar />
         </div>
